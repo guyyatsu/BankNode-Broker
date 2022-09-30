@@ -18,11 +18,11 @@ logging.basicConfig(filename="./.log", level=logging.DEBUG)
 """
 if logging.getLogger():
 
-  def INFO(msg):
+  def INFO(msg: str):
     try: return logging.info(msg)
     except: pass
 
-  def DEBUG(msg):
+  def DEBUG(msg: str):
     return logging.debug(msg)
 
 else: pass
@@ -62,7 +62,7 @@ class CryptographyMethods():
     return key
 
 
-  def Encryption(self, phrase: bytes, target):
+  def Encryption(self, phrase: bytes, target: str):
     intelligence = Fernet(phrase)
     return intelligence.encrypt(bytes(target, 'utf-8'))
   
