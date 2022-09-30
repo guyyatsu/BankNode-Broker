@@ -33,6 +33,9 @@ def ErrorHandling(error):
   return exit()  
 
 
+#########################################################
+
+
 class CryptographyMethods():
   """ A collection of tools specifically dealing with the security
   of certain given credentials.
@@ -45,6 +48,7 @@ class CryptographyMethods():
 
   def __init__(self):
     self = self 
+
 
   def SHA256(self, secret: str):
     """ Create a SHA-256 hash of whatever value is given. """
@@ -73,10 +77,7 @@ class CryptographyMethods():
 
 class DatabaseAPI():
  
-  def __init__(self):
-    """ Establish a persistent connection to the credential database;
-    ensure that the proper tables and headers are present then create a
-    pointer if so, and attempt to create them if not.
+#########################################################
 
     Credential Database Tables & Headers
 
@@ -122,14 +123,13 @@ class DatabaseAPI():
           ("credentials",)
         )# Call the success.
         DEBUG(f"{log['Query Success']}\n")
+
       # If we can't check whether the table exists; handle it.
       except Exception as error: ErrorHandling(error)
 
       # If the table exists, then do nothing.
       if len(self.cursor.fetchall()) > 0: pass
-      # Otherwise, attempt to create the table.
-      else:
-        # Declare our intention;
+
         DEBUG(f"{log['Query Execution']}:\n{sql['Create Credentials Table']}\n")
         try:
           # Invoke the statement.
@@ -138,6 +138,7 @@ class DatabaseAPI():
           DEBUG(f"{log['Query Success']}\n")
           # Save the table and it's headers.
           self.connection.commit()
+
         # If we can't create the credentials table; handle it.
         except Exception as error: ErrorHandling(error)
 
@@ -157,6 +158,7 @@ class DatabaseAPI():
         (username, password, key, secret)
       )
       DEBUG(f"{log['Query Success']}\n")   
+
     # If we can't enter new credentials to the table; handle it.
     except Exception as error: ErrorHandling(error)
   
@@ -175,7 +177,8 @@ class DatabaseAPI():
       self.cursor.execute(sql["Select Password"], (username,))
       # Call the success.
       DEBUG(f"{log['Query Success']}\n")
-    # If we can't Find the password within the table, handle it.
+
+    # If we can't find the password within the table, handle it.
     except Exception as error: ErrorHandling(error)
   
     # After approving the user we validate the password.
@@ -188,9 +191,11 @@ class DatabaseAPI():
       # The password matches.
       DEBUG(f"log['Confirm Password']\n")
       return True
+
     else: # The password does not match.
       DEBUG(f"log['Deny Password']\n")
       return False
+
 
   def RetrieveCredentials(self, username, key):
     """ Calls the CryptographyMethods.Encryption() method on a given
@@ -206,6 +211,7 @@ class DatabaseAPI():
       self.cursor.execute(sql['Market Key/Secret'], (username,))
       # Declare success.
       DEBUG(f"{log['Query Success']}\n")
+
     # If we can't retrieve the key/secret from the database; handle it.
     except Exception as error: ErrorHandling(error)
 
@@ -231,6 +237,9 @@ class DatabaseAPI():
 
    # Package up the results, and return them to the caller.
     return (UnencryptedKey, UnencryptedSecret)
+
+
+#########################################################
 
 
 class Userland():
