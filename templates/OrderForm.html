@@ -1,0 +1,50 @@
+
+<!-- Choose from a selection of available security symbols. -->
+<label for="SecuritySymbol">Symbol:</label>
+<!-- Includes both Stocks & Cryptocurrency. -->
+<select id="SecuritySymbol" name="SecuritySymbol">
+  {{ SymbolOptions | safe }}
+</select>
+
+<!-- Create a field for collecting the 'notary type' of the transaction. -->
+<fieldset>
+  <!-- The "notary type" is whether the unit being dealt with is in 
+  dollar amounts, or fractional share.-->
+  <legend>Notary Type:</legend>
+  <!-- Quantiative refers to the fractional amount. -->
+  <input type="radio" id="qty" value="qty" name="NotaryType"><label for="qty">Quantitative</label>
+  <!-- Notational refers to the dollar amount. -->
+  <input type="radio" id="note" value="note" name="NotaryType"><label for="note">Notational</label>
+</fieldset>
+
+<!-- The amount of whatever to exchange. -->
+<label for="NotaryAmount">Notary Amount:</label>
+<input type="number" id="NotaryAmount" name="NotaryAmount" value="1">
+
+<!-- Choose whether to buy or to sell. -->
+<fieldset>
+  <legend>Transactional Side:</legend>
+  <input type="radio" id="buy" value="buy" name="TransactionalSide"><label for="buy">Buy</label>
+  <input type="radio" id="sell" value="sell" name="TransactionalSide"><label for="sell">Sell</label>
+</fieldset>
+
+<!-- Designate order type. -->
+<label for="OrderType">Order Type:</label>
+<select id="OrderType" name="OrderType">
+  <!-- Place an order for the current going price. -->
+  <option value="market">Market</option>
+
+  <!-- Place an order at a specific price or better. -->
+  <option value="limit">Limit</option>
+
+  <!-- Place a Market order after crossing a specific price threshold. -->
+  <option value="stop">Stop</option>
+
+  <!-- Place a Limit order once the price moves past a specific point. -->
+  <option value="stop_limit">Stop-Limit</Stop-Limit></option>
+
+  <!-- Allows for continously updating stop orders based on market movement. -->
+  <option value="trailing_stop">Trailing-Stop</option>
+
+</select>
+
