@@ -75,89 +75,77 @@ class CryptographyMethods():
     intelligence = Fernet(phrase)
     return intelligence.decrypt(target)
 
-class DatabaseAPI():
- 
+
 #########################################################
 
-    Credential Database Tables & Headers
 
-        - credentials
-            - username
-            - password
-            - key
-            - secret
-
-        - $user_ledger
-            - id
-            - timestamp
-            - position
-            - symbol
-            - amount
-            - price
-
-        - market
-            - high
-            - low
-            - open
-            - close
-            - period
+class DatabaseAPI():
+ 
+  def __init__(self):
     """
+        Define:
+                - Database file
+                - Cryptographic Methods
+                - Database Connection
+                - Credentials Table
+    """
+
+    # Database File
     self.db = "./.credentials.db"
+
+    # Cryptographic Methods
     self.crypto = CryptographyMethods()
 
-    try:
+    try:# Initiate the database connection and create the connection cursor.
       DEBUG(f"{log['Database Connection']}:\n{self.db}\n")
-      # Initiate the database connection.
       self.connection = sqlite3.connect(self.db)
-      # Create the connection cursor.
       self.cursor = self.connection.cursor()    
-  
       DEBUG(f"{log['Database Connection Success']}\n")
 
-      try:# Check for the existence of the 'crednetials' table.
-        # Declare our intention;
+      try:# Check for the existence of the 'credentials' table.
         DEBUG(f"{log['Query Execution']}:\n{sql['Check Table Existence']}\n")
-        # Invoke the statement.
-        self.cursor.execute(
-          sql['Check Table Existence'],
-          ("credentials",)
-        )# Call the success.
+        self.cursor.execute(sql['Check Table Existence'], ("credentials",))
         DEBUG(f"{log['Query Success']}\n")
 
       # If we can't check whether the table exists; handle it.
       except Exception as error: ErrorHandling(error)
 
-      # If the table exists, then do nothing.
+      # I error: Errof the table exists, then do nothing.
       if len(self.cursor.fetchall()) > 0: pass
 
+      else: try:# Otherwise, attempt to create the table.
         DEBUG(f"{log['Query Execution']}:\n{sql['Create Credentials Table']}\n")
-        try:
-          # Invoke the statement.
-          self.cursor.execute(sql['Create Credentials Table'])
-          # Call the success.
-          DEBUG(f"{log['Query Success']}\n")
-          # Save the table and it's headers.
-          self.connection.commit()
+        self.cursor.execute(sql['Create Credentials Table'])
+        DEBUG(f"{log['Query Success']}\n")
+        self.connection.commit()
 
-        # If we can't create the credentials table; handle it.
-        except Exception as error: ErrorHandling(error)
+      # If we can't create the credentials table; handle it.
+      except Exception as error: ErrorHandling(error)
 
     # If we can't connect to the database; handle it.
-    except Exception as error: ErrorHandling(error)
+    except Exception asrHandling(error)
 
 
-  def StoreCredentials(self, username, password, key, secret):    
-    """ Add the username and password hash to the database.
-    It is assumed that any arguments passed to this function other than
-    the credabase are already encrypted. """
+  def StoreCredentials(self, username, password, credentials):
 
+    """
+    for CredentialPlatform in credentials.keys():
+
+      if ColumnExists(
+        CredentialPlatform\
+          .lower()\
+          .replace(" ", "-")
+      ): SQL.execute("Write tuple to existing column.")
+
+      else:
+        SQL.execute("Create new CredentialPlatform column.")
+        SQL.execute("Write tuple to existing column.")
+
+    """
     try:# Write new entries to the credentials table.
       DEBUG(f"{log['Query Execution']}:\n{sql['Enter New Credentials']}\n")
-      self.cursor.execute(
-        sql['Enter New Credentials'],
-        (username, password, key, secret)
-      )
-      DEBUG(f"{log['Query Success']}\n")   
+      self.cursor.execute(sql['Enter New Credentials'], (username, password, key, secret))
+      DEBUG(f"{log['Query Success']}\n")
 
     # If we can't enter new credentials to the table; handle it.
     except Exception as error: ErrorHandling(error)
@@ -165,30 +153,22 @@ class DatabaseAPI():
     # Save the addition.
     return self.connection.commit()
 
-
   def ValidateCredentials(self, username: str, password: str):
     """ Accepts a username and password and checks for their existence
     within the database. """
 
     try:# Search for the password within the credentials table.
-      # Declare our intention;
       DEBUG(f"{log['Query Execution']}:\n{sql['Select Password']}\n")
-      # Invoke the statement.
       self.cursor.execute(sql["Select Password"], (username,))
-      # Call the success.
       DEBUG(f"{log['Query Success']}\n")
 
     # If we can't find the password within the table, handle it.
     except Exception as error: ErrorHandling(error)
   
-    # After approving the user we validate the password.
-    logged_password = str(self.cursor.fetchall()[0][0])
-  
-    # Log the attempt.
     DEBUG(f"{log['Check Password']}\n")
-    # Compare the given password string to what's on file.
-    if password == logged_password:
-      # The password matches.
+    logged_password = str(self.cursor.fetchall()[0][0])
+
+    if password == logged_password:# The password matches.
       DEBUG(f"log['Confirm Password']\n")
       return True
 
@@ -205,22 +185,15 @@ class DatabaseAPI():
     password appended to their name. """
 
     try:# Select the key and secret values for a user.
-      # Declare our intention;
       DEBUG(f"{log['Query Execution']}:\n{sql['Market Key/Secret']}\n")
-      # Invoke the statement.
       self.cursor.execute(sql['Market Key/Secret'], (username,))
-      # Declare success.
       DEBUG(f"{log['Query Success']}\n")
 
     # If we can't retrieve the key/secret from the database; handle it.
     except Exception as error: ErrorHandling(error)
 
-    # Store the results, and select the return object itself.
     _results = self.cursor.fetchall()[0]
-
-    # Key comes first in the statement, so it's indexed first.
     EncryptedKey = _results[0]
-    # Secret is second, so it gets the next index.
     EncryptedSecret = _results[1]
 
     # Decrypt the key.
