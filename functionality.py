@@ -71,7 +71,7 @@ class CryptographyMethods():
     intelligence = Fernet(phrase)
     return intelligence.decrypt(target)
 
-class Database():
+class DatabaseAPI():
  
   def __init__(self):
     """ Establish a persistent connection to the credential database;
@@ -235,7 +235,7 @@ class Database():
 
 class Userland():
   def __init__(self):
-    self.db = Database()
+    self.db = DatabaseAPI()
     self.crypto = CryptographyMethods()
 
   def CreateUser(self, username):
