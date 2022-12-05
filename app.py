@@ -1,41 +1,30 @@
 #!/bin/python3
-from sys import path
-from flask import Flask
-
-# Define the logfile.
-logging.basicConfig(filename=f"{CWD()}/.logfile", encoding="utf-8", level=logging.DEBUG)
-
-# Bring in the core functionality.
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
 from functionality import *
 
-# The AlpacaAPI is what drives our brokerage; this is how we interface with it.
-from AlpacaAPI import *
 
-broker = Flask(__name__)
+app= Flask(__name__)
+socket= SocketIO(app)
 
-@broker.route("/")
-@broker.route("/home")
-""" Provide a little bit of detail explaining this section of the
-domain in greater, less technical, depth. """
 
-@broker.route("/login")
-""" Allow someone who already knows they have an account to attempt
-to sign in using an html form. """
+@socket.on("connect")
+def ack():
+  # Acknowledge the clients presence.
+  # 
 
-@broker.route("/signup")
-""" Create a new user from scratch;
-requires a market key & secret beforehand. """
 
-@broker.route("/home/{username}")
-""" The user's home space; where they can get a quick overview of their
-holdings. """
+@app.route("/<StockSymbol>/<StartDate>/<EndDate>")
+def DeliverGraph(StockSymbol, StartDate, EndDate):
+  # Convert StartDate and EndDate to UNIX timestamp.
+  StartDate= ConvertToTimestamp(str(StartDate))
+  EndDate= ConvertToTimestamp(str(EndDate))
 
-@broker.route("/positions/{username}")
-""" Pie-Charts for breaking down exactly what a user has, their P/L, and
-the average price for what they've got. """
+  # Select all .db entries between START and END.
+  cursor.execute( "SELECT * FROM ? WHERE start_date >= ? AND end_date <= ?",
+                  ( StockSymbol, StartDate, EndDate )                        )
 
-@broker.route("/orders/{username}")
-""" Display any outstanding limit/stop orders the user may have in play. """
+  # Feed results into matplotlib.Figure()
+  # Send results to client as an event.
 
-@broker.route("/charts/{username}")
-""" Report the user and their bot's performance over time. """
+
