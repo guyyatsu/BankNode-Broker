@@ -2,47 +2,28 @@
 <html>
 
   <head>
-    <title>{{title}}</title>
-  </head>
 
+    <title>{{title}}</title>
+
+    <!-- import jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+    <!-- import SocketIO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+
+  </head>
   
   <body>
-
-
-    <!-- The HeaderBanner contains the banner image, and the page title. -->
-    <!-- Site-Navigation could also be employed ;) -->
     <div id="HeaderBanner" class="PageHeader">
-
-      <!-- The banner image spans the width of the page; but the page should
-      scale to no more than around 85% of the actual horizontal dimensions
-      of the screen. -->
-      <div id="BannerImage" class="BannerImage PageWidth">
-
-        <!-- The banner image should  -->
-        <a><!-- The image links to https://guyyatsu.me -->
-          <img><!-- The image ia custom graphic by Y.T. -->
-        </a>
-
-        <span></span><!-- The motto for my space. -->
-
-      </div><!--[END BannerImage]-->
-
-      <!-- The page title should float to the left of the screen. -->
       <h1>{{title}}</h1>
-
     </div><!--[END HeaderBanner]-->
-
-
-    <!-- The DynamicBody contains the special content meant to be rendered by the page.-->
-    <div id="DynamicBody">
-
-    </div><!--[END DynamicBody]-->
-
+    <div id="MainBody">
+      {% block content %}
+      {% endblock %}
+    </div>
   </body>
 
-
   <footer>
-
   </footer>
 
 </html>

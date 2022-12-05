@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+    var socket = io();
+    socket.on("TransmissionRequest", function(msg, cb) {
+      $(#log).append("<p>Transmission: " + msg.data + "</p>");
+      if (cb)
+        cb();
+    });
+  });
+</script>
+<div id="log"></div>
+{% endblock %}

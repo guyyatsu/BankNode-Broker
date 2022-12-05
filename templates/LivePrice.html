@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block scripting %}
+
+  <script type="text/html" charset="utf-8">
+
+    // Clear off a given element for replacing it's value.
+    function ClearElement(elementID){
+      document.getElementById(elementID).innerHTML = "";
+    }
+
+    var socket = io();
+
+    // Initialize the clients connection
+    socket.on("connect", function() {
+      // We need an API for gathering the users IP address.
+      socket.emit("connect", {data: "A connection was made."});
+    });
+
+    socket.on("Server Acknowledgement", function() {
+      socket.emit("Request Graph", )
+    )
+ 
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <script type="text/javascript" charset="utf-8">
+    var socket = io();
+    socket.on("connect", function() {
+      socket.emit("EventTest", {data: "I'm connected!"});
+    });
+  </script>
+{% endblock %}
